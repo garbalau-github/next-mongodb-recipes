@@ -39,6 +39,10 @@ export async function getServerSideProps(ctx) {
     .findOne({ _id: new ObjectId(ctx.query.id) });
   recipe = JSON.parse(JSON.stringify(recipe));
 
+  return {
+    props: { recipe },
+  };
+
   // Local API
   // try {
   //   const response = await fetch(
