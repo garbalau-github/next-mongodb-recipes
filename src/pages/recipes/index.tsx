@@ -11,7 +11,7 @@ const Recipes = ({ recipes }) => {
   );
 };
 
-export async function getStaticProps(ctx) {
+export async function getServerSideProps(ctx) {
   // MongoDB
   // const client = await clientPromise;
   // const db = client.db('recipe-db');
@@ -28,7 +28,6 @@ export async function getStaticProps(ctx) {
   const recipes = await response.json();
   return {
     props: { recipes },
-    revalidate: 30,
   };
   // } catch (err) {
   //   console.log(err);
