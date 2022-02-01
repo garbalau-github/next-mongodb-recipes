@@ -23,16 +23,16 @@ export async function getStaticProps(ctx) {
   //   revalidate: 30,
   // };
 
-  try {
-    const response = await fetch(`${process.env.API_HOST}/api/recipes`);
-    const recipes = await response.json();
-    return {
-      props: { recipes },
-      revalidate: 30,
-    };
-  } catch (err) {
-    console.log(err);
-  }
+  // try {
+  const response = await fetch(`${process.env.API_HOST}/api/recipes`);
+  const recipes = await response.json();
+  return {
+    props: { recipes },
+    revalidate: 30,
+  };
+  // } catch (err) {
+  //   console.log(err);
+  // }
 }
 
 export default Recipes;
