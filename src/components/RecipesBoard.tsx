@@ -1,19 +1,30 @@
-import { Recipe } from '../interfaces/interfaces';
 import Link from 'next/link';
+import Image from 'next/image';
+import { isValidHttpUrl } from '../utils/isValidHttpUrl';
 
 const RecipesBoard = ({ recipes }) => {
   return (
     <div className='recipes'>
-      {recipes.map(({ _id, name, image }: Recipe) => (
-        <div key={_id} className='recipes-item'>
-          <Link href={`/recipes/${_id}`}>
-            <div>
-              <h4>{name}</h4>
-              <img src={image} alt={name} />
-            </div>
-          </Link>
-        </div>
-      ))}
+      {recipes.map(({ _id, recipe }) => {
+        let imageUrl;
+
+        if (!isValidHttpUrl(recipe.image)) {
+          imageUrl = '/nophoto.jpeg';
+        } else {
+          imageUrl = recipe.image;
+        }
+
+        return (
+          <div key={_id} className='recipes-item'>
+            <Link href={`/recipes/${_id}`}>
+              <div>
+                <h4>{recipe.name}</h4>
+                <img src={imageUrl} alt={recipe.name} />
+              </div>
+            </Link>
+          </div>
+        );
+      })}
     </div>
   );
 };
