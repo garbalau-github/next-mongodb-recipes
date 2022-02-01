@@ -11,17 +11,24 @@ const Recipes = ({ recipes }) => {
   );
 };
 
-export async function getServerSideProps() {
+export async function getStaticProps(ctx) {
+  // MongoDB
+  // const client = await clientPromise;
+  // const db = client.db('recipe-db');
+  // // Get all the recipes
+  // let recipes = await db.collection('recipes').find({}).toArray();
+  // recipes = JSON.parse(JSON.stringify(recipes));
+  // return {
+  //   props: { recipes },
+  //   revalidate: 30,
+  // };
+
   try {
-    const client = await clientPromise;
-    const db = client.db('recipe-db');
-
-    // Get all the recipes
-    let recipes = await db.collection('recipes').find({}).toArray();
-    recipes = JSON.parse(JSON.stringify(recipes));
-
+    const response = await fetch(`${process.env.API_HOST}/api/recipes`);
+    const recipes = await response.json();
     return {
       props: { recipes },
+      revalidate: 30,
     };
   } catch (err) {
     console.log(err);

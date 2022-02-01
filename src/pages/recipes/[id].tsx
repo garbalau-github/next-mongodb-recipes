@@ -30,30 +30,41 @@ const Recipe = ({ recipe }) => {
   );
 };
 
+// export async function getStaticPaths() {
+//   return {
+//     // no pages are generated at build time
+//     paths: [],
+//     // Enabling statically generating all pages
+//     fallback: true,
+//   };
+// }
+
 export async function getServerSideProps(ctx) {
   // MongoDB
-  const client = await clientPromise;
-  const db = client.db('recipe-db');
-  let recipe = await db
-    .collection('recipes')
-    .findOne({ _id: new ObjectId(ctx.query.id) });
-  recipe = JSON.parse(JSON.stringify(recipe));
+  // const client = await clientPromise;
+  // const db = client.db('recipe-db');
+  // let recipe = await db
+  //   .collection('recipes')
+  //   .findOne({ _id: new ObjectId(ctx.query.id) });
+  // recipe = JSON.parse(JSON.stringify(recipe));
 
-  return {
-    props: { recipe },
-  };
+  // return {
+  //   props: { recipe },
+  //   revalidate: 30,
+  // };
 
   // Local API
-  // try {
-  //   const response = await fetch(
-  //     `${process.env.API_HOST}/details?_id=${ctx.query.id}`
-  //   );
-  //   const recipe = await response.json();
-  //   return {
-  //     props: { recipe },
-  //   };
-  // } catch (err) {
-  //   console.log(err);
-  // }
+  try {
+    const response = await fetch(
+      `${process.env.API_HOST}/api/details?_id=${ctx.query.id}`
+    );
+    const recipe = await response.json();
+    return {
+      props: { recipe },
+    };
+  } catch (err) {
+    console.log(err);
+  }
 }
+
 export default Recipe;
