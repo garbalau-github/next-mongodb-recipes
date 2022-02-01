@@ -1,14 +1,16 @@
 import clientPromise from '../../../lib/mongodb';
-// import { ObjectId } from 'mongodb';
-import { NextApiResponse } from 'next';
+import { NextApiResponse, NextApiRequest } from 'next';
 
-export default async function handler(req, res: NextApiResponse) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   const client = await clientPromise;
   const db = client.db('recipe-db');
 
-  let recipe = await db.collection('recipes').find({}).toArray();
+  let recipes = await db.collection('recipes').find({}).toArray();
 
-  recipe = JSON.parse(JSON.stringify(recipe));
+  recipes = JSON.parse(JSON.stringify(recipes));
 
-  res.json(recipe);
+  res.json(recipes);
 }

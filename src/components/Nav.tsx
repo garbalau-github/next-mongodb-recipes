@@ -1,10 +1,9 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
 
-const Nav = ({ currentPage }) => {
+const Nav = () => {
   const router = useRouter();
-  const initialRouteState = [
+  const routes = [
     {
       route: '/',
       title: 'Home',
@@ -26,11 +25,9 @@ const Nav = ({ currentPage }) => {
       isActive: router.pathname === '/about' ? true : false,
     },
   ];
-  const [routes, setRoutes] = useState(initialRouteState);
 
   return (
     <>
-      <h1>{currentPage}</h1>
       <nav className='navigation'>
         <>
           {routes.map(({ route, title, isActive }, idx) => {

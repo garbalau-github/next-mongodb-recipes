@@ -37,12 +37,12 @@ h1 {
 
 .recipes {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   margin-top: 20px;
 
   &-item {
     cursor: pointer;
-    margin: 15px;
     img {
       width: 200px;
       height: 200px;
