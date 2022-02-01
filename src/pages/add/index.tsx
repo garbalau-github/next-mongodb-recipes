@@ -46,7 +46,7 @@ const Add = () => {
 
   const sendDataToBackend = async (recipe) => {
     // ${process.env.API_HOST}
-    const response = await fetch(`/api/add`, {
+    const response = await fetch(`/api/add-recipe`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

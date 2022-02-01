@@ -19,11 +19,6 @@ const Nav = () => {
       title: 'Add',
       isActive: router.pathname === '/add' ? true : false,
     },
-    {
-      route: '/about',
-      title: 'About',
-      isActive: router.pathname === '/about' ? true : false,
-    },
   ];
 
   return (

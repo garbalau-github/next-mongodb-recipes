@@ -40,7 +40,7 @@ const Recipe = ({ recipe }) => {
 
 export async function getServerSideProps(ctx) {
   const response = await fetch(
-    `${process.env.API_HOST}/api/details?_id=${ctx.query.id}`
+    `${process.env.API_HOST}/api/recipe?_id=${ctx.query.id}`
   );
   const recipe = await response.json();
   return {
