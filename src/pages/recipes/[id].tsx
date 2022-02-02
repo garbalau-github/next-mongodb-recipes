@@ -6,9 +6,9 @@ const Recipe = ({ recipe }) => {
 
   // Validate image
   let imageUrl: string;
-  !isValidHttpUrl(recipe.image)
+  !isValidHttpUrl(recipeItem.image)
     ? (imageUrl = '/no-photo.png')
-    : (imageUrl = recipe.image);
+    : (imageUrl = recipeItem.image);
 
   return (
     <>
