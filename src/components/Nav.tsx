@@ -11,35 +11,31 @@ const Nav = () => {
     },
     {
       route: '/recipes',
-      title: 'Recipes',
+      title: 'All Recipes',
       isActive: router.pathname === '/recipes' ? true : false,
     },
     {
       route: '/add',
-      title: 'Add',
+      title: 'New Recipe',
       isActive: router.pathname === '/add' ? true : false,
     },
   ];
 
   return (
-    <>
-      <nav className='navigation'>
-        <>
-          {routes.map(({ route, title, isActive }, idx) => {
-            return (
-              <h3
-                key={idx}
-                className={
-                  isActive ? 'navigation-link link-active' : 'navigation-link'
-                }
-              >
-                <Link href={route}>{title}</Link>
-              </h3>
-            );
-          })}
-        </>
-      </nav>
-    </>
+    <nav className='navigation'>
+      {routes.map(({ route, title, isActive }, idx) => {
+        return (
+          <h3
+            className={
+              isActive ? 'navigation-link link-active' : 'navigation-link'
+            }
+            key={idx}
+          >
+            <Link href={route}>{title}</Link>
+          </h3>
+        );
+      })}
+    </nav>
   );
 };
 

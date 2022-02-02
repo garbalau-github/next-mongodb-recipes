@@ -1,25 +1,20 @@
+import Nav from '../../components/Nav';
 import { useState, useEffect, useReducer } from 'react';
 import { useRouter } from 'next/router';
-import Nav from '../../components/Nav';
+
+// MUI
+import { FormControl, InputLabel, Input, FormHelperText } from '@mui/material';
+import Button from '@mui/material/Button';
+
+// Form Reducer
+const formReducer = (state, event) => {
+  return {
+    ...state,
+    [event.name]: event.value,
+  };
+};
 
 const Add = () => {
-  const router = useRouter();
-
-  // Form Reducer
-  const formReducer = (state, event) => {
-    if (event === 'reset') {
-      return {
-        name: '',
-        description: '',
-        imageUrl: '',
-      };
-    }
-    return {
-      ...state,
-      [event.name]: event.value,
-    };
-  };
-
   // States
   const [inputList, setInputList] = useState([
     { ingredientName: '', ingredientMeasure: '' },
@@ -27,25 +22,17 @@ const Add = () => {
   const [formData, setFormData] = useReducer(formReducer, {});
   const [submitting, setSubmitting] = useState(false);
   const [recipe, setRecipe] = useState({});
+  const router = useRouter();
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    setSubmitting(true);
-    setRecipe({ ...formData, ingredients: inputList });
-  };
-
+  // Add recipe
   useEffect(() => {
-    if (
-      submitting &&
-      recipe.hasOwnProperty('name') &&
-      recipe.hasOwnProperty('description')
-    ) {
-      sendDataToBackend(recipe);
+    if (submitting && recipe.hasOwnProperty('name')) {
+      addRecipeToDatabase(recipe);
     }
   }, [recipe]);
 
-  const sendDataToBackend = async (recipe) => {
-    // ${process.env.API_HOST}
+  // Fetch
+  const addRecipeToDatabase = async (recipe) => {
     const response = await fetch(`/api/add-recipe`, {
       method: 'POST',
       headers: {
@@ -56,12 +43,17 @@ const Add = () => {
     const data = await response.json();
     if (data.recipe.acknowledged) {
       setSubmitting(false);
-      alert('Recipe has been added!');
-      router.reload();
+      router.push('/recipes');
     }
   };
 
-  // Default Handler
+  // Form Handler
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setSubmitting(true);
+    setRecipe({ ...formData, ingredients: inputList });
+  };
+
   const handleChange = (event) => {
     const isCheckbox = event.target.type === 'checkbox';
     setFormData({
@@ -89,81 +81,120 @@ const Add = () => {
   };
 
   return (
-    <div className='container'>
+    <>
       <Nav />
-      <form onSubmit={handleSubmit}>
-        <fieldset>
-          <input
-            name='name'
-            value={formData.name || ''}
-            onChange={handleChange}
-            placeholder='Enter name'
-            autoComplete='off'
-            required
-          />
-        </fieldset>
-
-        <fieldset>
-          <input
-            name='description'
-            value={formData.description || ''}
-            onChange={handleChange}
-            placeholder='Enter description'
-            autoComplete='off'
-            required
-          />
-        </fieldset>
-
-        <fieldset>
-          <input
-            name='image'
-            // value={formData.imageUrl || ''}
-            onChange={handleChange}
-            placeholder='Enter image URL'
-            autoComplete='off'
-            required
-            type='text'
-          />
-        </fieldset>
-
-        {inputList.map((inputEl, idx) => {
-          return (
-            <div style={{ display: 'flex' }} key={idx}>
-              <fieldset>
-                <input
-                  name='ingredientName'
-                  placeholder='Ingredient Name'
-                  value={inputEl.ingredientName}
-                  onChange={(e) => handleInputChange(e, idx)}
-                  autoComplete='off'
-                  required
-                />
-              </fieldset>
-              <fieldset>
-                <input
-                  name='ingredientMeasure'
-                  placeholder='Ingredient Measure'
-                  value={inputEl.ingredientMeasure}
-                  onChange={(e) => handleInputChange(e, idx)}
-                  autoComplete='off'
-                  required
-                />
-              </fieldset>
-              <div>
-                <button onClick={() => handleRemoveIngredientClick(idx)}>
-                  Remove Row
-                </button>
-                <button onClick={handleAddIngredientClick}>Add Row</button>
+      <div className='container'>
+        <form className='form' onSubmit={handleSubmit}>
+          <h1>Add New Recipe</h1>
+          <FormControl className='form-element'>
+            <InputLabel htmlFor='recipe-name'>Name</InputLabel>
+            <Input
+              required
+              autoComplete='off'
+              name='name'
+              value={formData.name || ''}
+              onChange={handleChange}
+              id='recipe-name'
+              aria-describedby='my-helper-text'
+            />
+            <FormHelperText id='my-helper-text'>
+              Something delicious?
+            </FormHelperText>
+          </FormControl>
+          <FormControl className='form-element'>
+            <InputLabel htmlFor='recipe-image'>Image</InputLabel>
+            <Input
+              required
+              name='image'
+              autoComplete='off'
+              onChange={handleChange}
+              id='recipe-image'
+              aria-describedby='my-helper-text'
+            />
+            <FormHelperText id='my-helper-text'>
+              Provide us with the image
+            </FormHelperText>
+          </FormControl>
+          {inputList.map((inputEl, idx) => {
+            return (
+              <div className='form-ingredients' key={idx}>
+                <FormControl className='form-element'>
+                  <InputLabel htmlFor='ingredient-name'>Ingredient</InputLabel>
+                  <Input
+                    required
+                    autoComplete='off'
+                    name='ingredientName'
+                    value={inputEl.ingredientName}
+                    onChange={(e) => handleInputChange(e, idx)}
+                    id='ingredient-name'
+                    aria-describedby='my-helper-text'
+                  />
+                  <FormHelperText id='my-helper-text'>
+                    What goes inside?
+                  </FormHelperText>
+                </FormControl>
+                <FormControl className='form-element'>
+                  <InputLabel htmlFor='ingredient-measure'>Measure</InputLabel>
+                  <Input
+                    required
+                    autoComplete='off'
+                    name='ingredientMeasure'
+                    value={inputEl.ingredientMeasure}
+                    onChange={(e) => handleInputChange(e, idx)}
+                    id='ingredient-measure'
+                    aria-describedby='my-helper-text'
+                  />
+                  <FormHelperText id='my-helper-text'>
+                    How much of that?
+                  </FormHelperText>
+                </FormControl>
+                <FormControl className='form-element form-ingredients__buttons'>
+                  <Button
+                    color='error'
+                    className='form-ingredients__button'
+                    variant='contained'
+                    onClick={() => handleRemoveIngredientClick(idx)}
+                  >
+                    Remove
+                  </Button>
+                  <Button
+                    color='success'
+                    className='form-ingredients__button'
+                    variant='contained'
+                    onClick={handleAddIngredientClick}
+                  >
+                    Add
+                  </Button>
+                </FormControl>
               </div>
-            </div>
-          );
-        })}
-
-        <button disabled={submitting} type='submit'>
-          Submit
-        </button>
-      </form>
-    </div>
+            );
+          })}
+          <FormControl className='form-element'>
+            <InputLabel htmlFor='recipe-description'>Description</InputLabel>
+            <Input
+              required
+              autoComplete='off'
+              name='description'
+              value={formData.description || ''}
+              onChange={handleChange}
+              id='recipe-description'
+              aria-describedby='my-helper-text'
+            />
+            <FormHelperText id='my-helper-text'>
+              Describe how to cook it
+            </FormHelperText>
+          </FormControl>
+          <Button
+            color='primary'
+            variant='contained'
+            disabled={submitting}
+            type='submit'
+          >
+            Submit
+          </Button>
+        </form>
+      </div>
+    </>
   );
 };
 

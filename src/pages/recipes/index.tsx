@@ -1,21 +1,26 @@
 import Nav from '../../components/Nav';
 import Link from 'next/link';
 import { isValidHttpUrl } from '../../utils/isValidHttpUrl';
+import { useRouter } from 'next/router';
+
+// MUI
+import Button from '@mui/material/Button';
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import Typography from '@mui/material/Typography';
 
 const Recipes = ({ recipes }) => {
-  // let imageUrl;
+  const router = useRouter();
 
-  // if (!isValidHttpUrl(recipe.image)) {
-  //   imageUrl = '/nophoto.jpeg';
-  // } else {
-  //   imageUrl = recipe.image;
-  // }
+  // Refresh getServerSideProps
+  const refreshData = () => {
+    const router = useRouter();
+    router.replace(router.asPath);
+  };
 
-  console.log(recipes);
-
-  const deletePost = async (_id) => {
-    console.log(_id);
-    // ${process.env.API_HOST}
+  // Fetch
+  const removeRecipeFromDataBase = async (_id) => {
     const response = await fetch(`/api/delete-recipe`, {
       method: 'DELETE',
       headers: {
@@ -25,29 +30,56 @@ const Recipes = ({ recipes }) => {
     });
     const data = await response.json();
     if (data.recipe.acknowledged) {
-      console.log('Element deleted!');
+      refreshData();
     }
   };
 
   return (
-    <div className='container'>
+    <>
       <Nav />
-      <div className='recipes'>
-        {recipes.map(({ _id, recipe }) => {
-          return (
-            <div key={_id} className='recipes-item'>
-              <Link href={`/recipes/${_id}`}>
-                <div>
-                  <h4>{recipe.name}</h4>
-                  <img src={recipe.image} alt={recipe.name} />
-                </div>
-              </Link>
-              <button onClick={() => deletePost(_id)}>Delete</button>
-            </div>
-          );
-        })}
+      <div className='container'>
+        <div className='recipes'>
+          {recipes.map(({ _id, recipe }) => {
+            // Validate image
+            let imageUrl: string;
+            !isValidHttpUrl(recipe.image)
+              ? (imageUrl = '/nophoto.jpeg')
+              : (imageUrl = recipe.image);
+
+            return (
+              <div className='recipes-card'>
+                <Card>
+                  <CardContent>
+                    <Link href={`/recipes/${_id}`}>
+                      <Typography color='text.secondary' gutterBottom>
+                        <span className='recipes-title'>{recipe.name}</span>
+                      </Typography>
+                    </Link>
+                    <img
+                      className='recipes-image'
+                      width={200}
+                      height={100}
+                      src={imageUrl}
+                      alt={recipe.name}
+                    />
+                    <CardActions>
+                      <Button
+                        variant='contained'
+                        color='error'
+                        onClick={() => removeRecipeFromDataBase(_id)}
+                        size='small'
+                      >
+                        Delete Recipe
+                      </Button>
+                    </CardActions>
+                  </CardContent>
+                </Card>
+              </div>
+            );
+          })}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
