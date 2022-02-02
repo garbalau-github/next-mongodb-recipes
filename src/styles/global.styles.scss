@@ -39,7 +39,7 @@ body {
   }
 
   &-element {
-    margin-bottom: 25px;
+    margin-bottom: 25px !important;
   }
 
   &-ingredients {
@@ -52,9 +52,9 @@ body {
     }
 
     &__buttons {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
+      display: flex !important;
+      flex-direction: row !important;
+      align-items: center !important;
     }
   }
 }
