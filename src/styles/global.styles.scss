@@ -76,8 +76,8 @@ body {
     margin: 5px;
   }
   &-image {
-    max-width: 350px;
-    height: 150px;
+    width: 225px;
+    height: 175px;
     margin-bottom: 10px;
     object-fit: cover;
   }
@@ -104,7 +104,7 @@ body {
   }
 
   &-ingredients {
-    display: inline-flex;
+    display: flex;
     flex-direction: column;
     h3 {
       color: royalblue !important;
